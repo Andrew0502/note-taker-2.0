@@ -22,13 +22,23 @@ app.get("/notes", function(req, res){
 
 app.get("/api/notes", function(req, res){
     fs.readFile("./Develop/db/db.json", function(err, data){
-
+        if(err) throw err;
+        console.log(JSON.parse(data));
+        let parsedData = JSON.parse(data);
+        res.send(parsedData);
     });
 });
 
 app.post("/api/notes", function(req, res){
     fs.readFile("./Develop/db/db.json", "utf-8", function(err, data){
-    
+        if(err) throw err;
+        const parsedData = JSON.parse(data);
+        req.body.id = uuidv4();
+        parsedData.push(req.body);
+        fs.writeFile("./Develop/db/db.json", JSON.stringify(parsedData), "utf-8", (err) => {
+            if (err) throw err;
+        });
+        res.json(parsedData);
     });   
 });
 

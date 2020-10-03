@@ -44,7 +44,15 @@ app.post("/api/notes", function(req, res){
 
 app.delete("/api/notes/:id", function(req,res){
     fs.readFile("./Develop/db/db.json", "utf-8", (err, data) => {
-        
+        if (err) throw err;
+        const chocolate = JSON.parse(data);
+        parsedData = chocolate.filter((data) => {
+            return data.id != req.params.id
+        })
+        fs.writeFile("./Develop/db/db.json", JSON.stringify(parsedData), (err) => {
+            if (err) throw err;
+            res.json(parsedData);
+        });
     });
 });
 
